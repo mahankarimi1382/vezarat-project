@@ -1,7 +1,13 @@
 .App {
   text-align: center;
 }
-
+@font-face {
+  font-family: Vazir;
+  src: url(/src/assets/Vazir-Light-FD-WOL.woff);
+}
+*{
+  font-family: Vazir;
+}
 .App-logo {
   height: 40vmin;
   pointer-events: none;
