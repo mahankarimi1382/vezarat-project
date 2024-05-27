@@ -45,7 +45,7 @@ function SignUpForm() {
             className=" w-1/2 bg-slate-300 hover:bg-slate-400 hover:bg-opacity-40 transition-all rounded-t-md bg-opacity-40 p-3 h-10 border-b-2 border-blue-700"
             {...register("Familly")}
           />
-          <DatePiker {...register("Birth")} />
+          <DatePiker />
           <input
             placeholder="مدرک تحصیلی"
             className=" w-1/2 bg-slate-300 hover:bg-slate-400 hover:bg-opacity-40 transition-all rounded-t-md bg-opacity-40 p-3 h-10 border-b-2 border-blue-700"

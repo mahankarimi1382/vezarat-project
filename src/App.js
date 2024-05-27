@@ -5,6 +5,10 @@ import Home from "./Pages/Main/Home/Home";
 import UserSignUp from "./Pages/Auth/Signup/UserSignUp";
 import { ToastContainer } from "react-toastify";
 import Admin from "./Pages/Main/Admin/Admin";
+import Admin2 from "./Pages/Main/Admin2/Admin2";
+import Admin3 from "./Pages/Main/Admin3/Admin3";
+import Admin4 from "./Pages/Main/Admin4/Admin4";
+import Admin5 from "./Pages/Main/Admin5/Admin5";
 
 function App() {
   return (
@@ -14,7 +18,11 @@ function App() {
           <Route index element={<Home />} />
           <Route path="login" element={<Login />} />
           <Route path="UserSignUp" element={<UserSignUp />} />
-          <Route path="Admin" element={<Admin />} />
+          <Route path="Admin/runExam" element={<Admin />} />
+          <Route path="Admin/createExam" element={<Admin2 />} />
+          <Route path="Admin/CreateQuestion" element={<Admin3 />} />
+          <Route path="Admin/CreateLicense" element={<Admin4 />} />
+          <Route path="Admin/َAccepters" element={<Admin5 />} />
         </Routes>
         <ToastContainer />
       </BrowserRouter>
