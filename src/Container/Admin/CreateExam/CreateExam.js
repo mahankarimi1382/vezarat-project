@@ -1,11 +1,14 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Eror, success } from "../../../utilies/Toasts";
 import { TiDelete } from "react-icons/ti";
 
 function CreateExam() {
-  const [createdExam, setCreatedExam] = useState([]);
-  console.log(createdExam);
+  const [createdExam, setCreatedExam] = useState(() => {
+    return JSON.parse(localStorage.getItem("createdExam")) || [];
+  });
+  const [acceptersDetails, setAcceptersDetails] = useState([]);
+  console.log(acceptersDetails);
   const {
     register,
     handleSubmit,
@@ -18,13 +21,19 @@ function CreateExam() {
       Eror("اطلاعات آزمون را وارد کنید");
     } else {
       success("آزمون با موفقیت ساخته شد");
-      console.log(data);
       setCreatedExam([...createdExam, { ...data, id: createdExam.length + 1 }]);
       resetField("exam_name");
       resetField("exam_host");
       resetField("exam_company");
     }
   };
+  useEffect(() => {
+    const accepters = JSON.parse(localStorage.getItem("accepters"));
+    setAcceptersDetails(accepters);
+  }, []);
+  useEffect(() => {
+    localStorage.setItem("createdExam", JSON.stringify(createdExam));
+  }, [createdExam]);
   const removeExam = (id) => {
     let filtered = createdExam.filter((item) => item.id !== id);
     if (
@@ -97,8 +106,9 @@ function CreateExam() {
                   {...register("exam_host")}
                   className=" w-36 h-8 px-2 text-base rounded-md"
                 >
-                  <option></option>
-                  <option>فلانی</option>
+                  {acceptersDetails.map((item) => {
+                    return <option>{item.accepter_name}</option>;
+                  })}
                 </select>
               </div>
               <div className=" gap-2 flex ">

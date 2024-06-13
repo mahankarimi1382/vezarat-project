@@ -4,7 +4,7 @@ import persian from "react-date-object/calendars/persian";
 import persian_fa from "react-date-object/locales/persian_fa";
 import Icon from "react-multi-date-picker/components/icon";
 
-function DatePiker() {
+function DatePiker({setDate}) {
 
 
   return (
@@ -13,6 +13,7 @@ function DatePiker() {
       locale={persian_fa}
       calendarPosition="bottom-center"
       render={(value, openCalendar) => {
+        setDate(value[0])
         console.log(value);
         return (
           <div className=" w-screen relative max-w-screen-xl flex justify-center">

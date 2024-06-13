@@ -1,9 +1,19 @@
 import React, { useState } from "react";
-import { useForm } from "react-hook-form";
 import { Eror, success } from "../../utilies/Toasts";
 import { TiDelete } from "react-icons/ti";
+import { FaEdit } from "react-icons/fa";
 
 function CreateQuestion() {
+  const [isEdit, setIsEdit] = useState(false);
+  const [editNumber, setEditNumber] = useState();
+  const [questionText, setQuestionText] = useState("");
+  const [answer1, setAnswer1] = useState("");
+  const [answer2, setAnswer2] = useState("");
+  const [answer3, setAnswer3] = useState("");
+  const [answer4, setAnswer4] = useState("");
+  const [correct, setCorrect] = useState("");
+  const [category, setCategory] = useState("");
+
   const [questions, setQuestions] = useState([]);
   const [count, setCount] = useState(questions.length + 1);
   const removeQuestion = (number) => {
@@ -22,38 +32,78 @@ function CreateQuestion() {
       setCount(filtered.length + 1);
     }
   };
-  const {
-    register,
-    handleSubmit,
-    watch,
-    resetField,
-    formState: { errors },
-  } = useForm();
-  const onSubmitQ = (data) => {
-    console.log(data);
-    if (
-      data.answer1 &&
-      data.answer2 &&
-      data.answer3 &&
-      data.answer4 &&
-      data.correct_answer &&
-      data.exam_category &&
-      data.question
-    ) {
-      setQuestions([...questions, { ...data, number: questions.length + 1 }]);
-      resetField("answer1");
-      resetField("answer2");
-      resetField("answer3");
-      resetField("answer4");
-      resetField("question");
-      resetField("correct_answer");
-      resetField("exam_category");
 
+  const AddQuestion = () => {
+    console.log(category);
+    if (
+      answer1 &&
+      answer2 &&
+      answer3 &&
+      answer4 &&
+      correct &&
+      // category &&
+      questionText
+    ) {
+      setQuestions([
+        ...questions,
+        {
+          answer1,
+          answer2,
+          answer3,
+          answer4,
+          category,
+          questionText,
+          number: questions.length + 1,
+          correct
+        },
+      ]);
+      setAnswer1("");
+      setAnswer2("");
+      setAnswer3("");
+      setAnswer4("");
+      setQuestionText("");
+      setCategory("");
+      setCorrect("");
       setCount(count + 1);
       success(`سوال ${count} با موفقیت ثبت شد`);
     } else {
       Eror("لطفا اطلاعات سوال را کامل وارد کنید");
     }
+  };
+  const handleEdit = (item) => {
+    setIsEdit(true);
+    setQuestionText(item.questionText);
+    setAnswer1(item.answer1);
+    setAnswer2(item.answer2);
+    setAnswer3(item.answer3);
+    setAnswer4(item.answer4);
+    setCorrect(item.correct);
+    setCategory(item.category);
+    setEditNumber(item.number);
+  };
+  const edit = () => {
+    const edited = questions.map((item) =>
+      item.number === editNumber
+        ? {
+            ...item,
+            answer1,
+            answer2,
+            answer3,
+            answer4,
+            correct,
+            category,
+            questionText,
+          }
+        : item
+    );
+    setQuestions(edited);
+    setIsEdit(false);
+    setQuestionText("")
+    setAnswer1("")
+    setAnswer2("")
+    setAnswer3("")
+    setAnswer4("")
+
   };
   return (
     <div
@@ -62,11 +112,12 @@ function CreateQuestion() {
     >
       <div className=" w-4/5 min-h-[60%] backdrop-blur-md backdrop-brightness-150 bg-cyan-700 shadow-lg shadow-blue-500/50  rounded-xl bg-opacity-50">
         <h2 className=" bg-blue-700 text-white rounded-t-xl py-4 text-2xl font-semibold">
-          سوال
-          {count}
+          {isEdit
+            ? "ویرایش"
+            : `سوال
+          ${count}`}
         </h2>
-        <form
-          onSubmit={handleSubmit(onSubmitQ)}
+        <div
           className=" w-full h-full flex flex-col justify-center items-center"
           dir="rtl"
         >
@@ -75,37 +126,44 @@ function CreateQuestion() {
               <div className=" w-full text-2xl mb-7  justify-between flex">
                 <h2>صورت سوال: </h2>
                 <textarea
-                  {...register("question")}
+                  onChange={(e) => setQuestionText(e.target.value)}
                   className=" resize-none rounded-xl p-2 h-20 text-base w-[80%]"
+                  value={questionText}
                 />
               </div>
               <div className=" -mt-14 w-full justify-center items-center gap-3 flex-col flex">
                 <input
-                  {...register("answer1")}
+                  onChange={(e) => setAnswer1(e.target.value)}
                   className=" h-7 w-full rounded-lg px-2"
                   placeholder="گزینه ی 1"
+                  value={answer1}
                 />
+
                 <input
-                  {...register("answer2")}
+                  onChange={(e) => setAnswer2(e.target.value)}
                   className=" h-7 w-full rounded-lg px-2"
                   placeholder="گزینه ی 2"
+                  value={answer2}
                 />
                 <input
-                  {...register("answer3")}
+                  onChange={(e) => setAnswer3(e.target.value)}
                   className=" h-7 w-full rounded-lg px-2"
                   placeholder="گزینه ی 3"
+                  value={answer3}
                 />
                 <input
-                  {...register("answer4")}
+                  onChange={(e) => setAnswer4(e.target.value)}
                   className=" h-7 w-full rounded-lg px-2"
                   placeholder="گزینه ی 4"
+                  value={answer4}
                 />
               </div>
               <div className=" gap-2 text-2xl  flex">
                 <h2>گزینه ی صحیح:</h2>
                 <select
-                  {...register("correct_answer")}
+                  onChange={(e) => setCorrect(e.target.value)}
                   className=" text-base rounded-lg"
+                  value={correct}
                 >
                   <option value={1}>گزینه 1</option>
                   <option value={2}>گزینه 2</option>
@@ -116,34 +174,51 @@ function CreateQuestion() {
               <div className=" gap-2  text-2xl  flex">
                 <h2>دسته ی آزمون:</h2>
                 <select
-                  {...register("exam_category")}
+                  onChange={(e) => setCategory(e.target.value)}
                   className=" text-base rounded-lg"
+                  value={category}
                 >
                   <option>آزمون فلان</option>
                 </select>
               </div>
             </div>
           </div>
-          <button
-            type="submit"
-            className=" hover:bg-indigo-800 mb-20 transition-all hover:shadow-xl bg-blue-700 h-10 rounded-md flex items-center justify-center text-2xl text-white w-1/2"
-          >
-            ثبت
-          </button>{" "}
-        </form>
+          {isEdit ? (
+            <button
+              onClick={edit}
+              type="submit"
+              className=" hover:bg-indigo-800 mb-20 transition-all hover:shadow-xl bg-blue-700 h-10 rounded-md flex items-center justify-center text-2xl text-white w-1/2"
+            >
+              ویرایش
+            </button>
+          ) : (
+            <button
+              onClick={AddQuestion}
+              type="submit"
+              className=" hover:bg-indigo-800 mb-20 transition-all hover:shadow-xl bg-blue-700 h-10 rounded-md flex items-center justify-center text-2xl text-white w-1/2"
+            >
+              ثبت
+            </button>
+          )}
+        </div>
       </div>
       <div className=" w-[80%] text-xl">
         {questions.map((item, index) => {
+          console.log(item)
           return (
             <div
               dir="rtl"
               className=" my-5 gap-7 justify-center items-center flex flex-col w-full px-4 py-2 rounded-lg bg-blue-300 bg-opacity-50"
               key={item.number}
             >
-              <div className=" w-full items-start border-b-2 border-blue-800 flex justify-between">
+              <div className=" w-full border-b-2 items-center border-blue-800 flex justify-between">
                 <h2 className=" w-[90%] text-start">
-                  سوال {item.number}:{item.question}
+                  سوال {item.number}:{item.questionText}
                 </h2>
+                <FaEdit
+                  onClick={() => handleEdit(item)}
+                  className=" text-blue-800 cursor-pointer"
+                />
                 <TiDelete
                   onClick={() => removeQuestion(item.number)}
                   className=" cursor-pointer text-3xl text-red-700"
@@ -152,28 +227,28 @@ function CreateQuestion() {
               <div className=" items-start w-full flex flex-col gap-5">
                 <h2
                   className={` px-2 rounded-lg min-w-24 ${
-                    item.correct_answer == 1 ? "bg-green-600" : "bg-red-600"
+                    item.correct == 1 ? "bg-green-600" : "bg-red-600"
                   }`}
                 >
                   1-{item.answer1}
                 </h2>
                 <h2
                   className={` px-2 rounded-lg min-w-24 ${
-                    item.correct_answer == 2 ? "bg-green-600" : "bg-red-600"
+                    item.correct == 2 ? "bg-green-600" : "bg-red-600"
                   }`}
                 >
                   2-{item.answer2}
                 </h2>
                 <h2
                   className={` px-2 rounded-lg min-w-24 ${
-                    item.correct_answer == 3 ? "bg-green-600" : "bg-red-600"
+                    item.correct == 3 ? "bg-green-600" : "bg-red-600"
                   }`}
                 >
                   3-{item.answer3}
                 </h2>
                 <h2
                   className={` px-2 rounded-lg min-w-24 ${
-                    item.correct_answer == 4 ? "bg-green-600" : "bg-red-600"
+                    item.correct == 4 ? "bg-green-600" : "bg-red-600"
                   }`}
                 >
                   4-{item.answer4}

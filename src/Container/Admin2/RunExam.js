@@ -1,12 +1,10 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import persian from "react-date-object/calendars/persian";
 
 import persian_fa from "react-date-object/locales/persian_fa";
 import { useForm } from "react-hook-form";
-
 import DatePicker from "react-multi-date-picker";
 import { Eror, success } from "../../utilies/Toasts";
-import { useLocation } from "react-router";
 
 function RunExam() {
   const {
@@ -20,11 +18,24 @@ function RunExam() {
     1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21,
     22, 23, 24,
   ];
-  const [runnedExam, setRunnedExam] = useState([]);
+  const [runnedExam, setRunnedExam] = useState(() => {
+    return JSON.parse(localStorage.getItem("runnedExams")) || [];
+  });
+  const an = JSON.parse(localStorage.getItem("runnedExams"));
+  console.log(an);
+  useEffect(() => {
+    localStorage.setItem("runnedExams", JSON.stringify(runnedExam));
+  }, [runnedExam]);
+  const [examDetails, setExamDetails] = useState([]);
   const [date, setDate] = useState();
   const [initDate, setInitDate] = useState(new Date());
-  console.log(date);
+  const licenses = JSON.parse(localStorage.getItem("licenses"));
 
+  useEffect(() => {
+    const createdExam = JSON.parse(localStorage.getItem("createdExam"));
+    console.log(createdExam);
+    setExamDetails(createdExam);
+  }, []);
   const onSubmitForm = (data) => {
     if (
       !data.exam_license ||
@@ -41,6 +52,7 @@ function RunExam() {
         ...runnedExam,
         { ...data, exam_date: date, id: runnedExam.length + 1 },
       ]);
+
       resetField("exam_name");
       resetField("exam_time_h");
       resetField("exam_time_m");
@@ -49,7 +61,6 @@ function RunExam() {
       resetField("exam_total_time");
       success("آزمون با موفقیت ایجاد شد");
       setInitDate(new Date());
-      console.log(data);
     }
   };
   const removeExam = (id) => {
@@ -58,7 +69,6 @@ function RunExam() {
       remvedList[remvedList.length - 1] &&
       remvedList[remvedList.length - 1].id > remvedList.length
     ) {
-      console.log(remvedList[remvedList.length - 1].id);
       let editedList = remvedList.map((item, index) =>
         item.id !== index + 1 ? { ...item, id: index + 1 } : item
       );
@@ -86,9 +96,9 @@ function RunExam() {
       )}
 
       {runnedExam.map((item) => {
-        console.log(item);
         return (
           <div
+            key={item.id}
             dir="rtl"
             className=" w-full flex flex-col h-16 justify-center border-b-2 bg-slate-300"
           >
@@ -132,13 +142,14 @@ function RunExam() {
             <div className=" w-1/2 gap-10 items-start flex flex-col">
               <div className=" gap-[14px] text-2xl flex">
                 <h2>نام آزمون : </h2>
+
                 <select
                   className=" w-60 h-8 px-2 text-lg text-black rounded-md"
                   {...register("exam_name")}
                 >
-                  <option></option>
-
-                  <option>آزمون فلان</option>
+                  {examDetails.map((item) => {
+                    return <option key={item.id}>{item.exam_name}</option>;
+                  })}
                 </select>
               </div>
               <div className=" text-2xl gap-2 flex ">
@@ -150,6 +161,7 @@ function RunExam() {
                   {hours.map((hours) => {
                     return (
                       <option
+                        key={hours}
                         value={hours}
                         className=" text-sm  text-black rounded-md"
                       >
@@ -181,7 +193,6 @@ function RunExam() {
                 <DatePicker
                   value={initDate}
                   render={(value, openCalendar) => {
-                    console.log(value);
                     setDate(value);
                     return (
                       <div
@@ -202,7 +213,9 @@ function RunExam() {
                   {...register("exam_license")}
                   className=" w-40 rounded-md"
                 >
-                  <option>هرچی</option>
+                  {licenses.map((item) => {
+                    return <option>{item.license_name}</option>;
+                  })}
                 </select>
               </div>
               <div className=" gap-[46px] flex ">

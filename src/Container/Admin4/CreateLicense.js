@@ -1,9 +1,16 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { TiDelete } from "react-icons/ti";
 import { Eror, success } from "../../utilies/Toasts";
 
 function CreateLicense() {
+  const [licenses, setLicenses] = useState(() => {
+    return JSON.parse(localStorage.getItem("licenses")) || [];
+  });
+  console.log(licenses);
+  useEffect(() => {
+    localStorage.setItem("licenses", JSON.stringify(licenses));
+  }, [licenses]);
   const {
     register,
     handleSubmit,
@@ -11,7 +18,6 @@ function CreateLicense() {
     resetField,
     formState: { errors },
   } = useForm();
-  const [licenses, setLicenses] = useState([]);
   const removeLicense = (id) => {
     let removed = licenses.filter((item) => item.id !== id);
     if (removed[0] && removed[removed.length - 1].id > removed.length) {
@@ -70,7 +76,7 @@ function CreateLicense() {
     >
       <div className=" w-4/5 h-1/2 backdrop-blur-md backdrop-brightness-150 bg-cyan-700 shadow-lg shadow-blue-500/50  rounded-xl bg-opacity-50">
         <h2 className=" bg-blue-700 text-white rounded-t-xl py-4 text-2xl font-semibold">
-          ایجاد آزمون
+          ایجاد مدرک
         </h2>
         <form
           onSubmit={handleSubmit(onSubmit)}
