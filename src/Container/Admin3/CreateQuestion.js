@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Eror, success } from "../../utilies/Toasts";
 import { TiDelete } from "react-icons/ti";
 import { FaEdit } from "react-icons/fa";
 
 function CreateQuestion() {
+  const [filtredQuestions, setFiltredQuestions] = useState([]);
   const [isEdit, setIsEdit] = useState(false);
   const [editNumber, setEditNumber] = useState();
   const [questionText, setQuestionText] = useState("");
@@ -13,9 +14,12 @@ function CreateQuestion() {
   const [answer4, setAnswer4] = useState("");
   const [correct, setCorrect] = useState("");
   const [category, setCategory] = useState("");
-
   const [questions, setQuestions] = useState([]);
+  const [id, setId] = useState("");
+  console.log(questions);
   const [count, setCount] = useState(questions.length + 1);
+  const [exams, setExams] = useState([]);
+  console.log(questions);
   const removeQuestion = (number) => {
     let filtered = questions.filter((item) => item.number !== number);
     if (
@@ -32,7 +36,10 @@ function CreateQuestion() {
       setCount(filtered.length + 1);
     }
   };
-
+  useEffect(() => {
+    const exams = JSON.parse(localStorage.getItem("createdExam"));
+    setExams(exams);
+  }, []);
   const AddQuestion = () => {
     console.log(category);
     if (
@@ -54,7 +61,7 @@ function CreateQuestion() {
           category,
           questionText,
           number: questions.length + 1,
-          correct
+          correct,
         },
       ]);
       setAnswer1("");
@@ -66,6 +73,7 @@ function CreateQuestion() {
       setCorrect("");
       setCount(count + 1);
       success(`سوال ${count} با موفقیت ثبت شد`);
+      setFiltredQuestions(false)
     } else {
       Eror("لطفا اطلاعات سوال را کامل وارد کنید");
     }
@@ -80,6 +88,22 @@ function CreateQuestion() {
     setCorrect(item.correct);
     setCategory(item.category);
     setEditNumber(item.number);
+  };
+  const filteringQuestions = (item) => {
+    let allQuestions=questions
+
+    if(item){
+      setId(id);
+      console.log(item.id);
+      let filtered = questions.filter(
+        (items) => items.category === item.exam_name
+      );
+      console.log(filtered);
+      setFiltredQuestions(filtered);
+    }else{
+      setFiltredQuestions(allQuestions)
+    }
+
   };
   const edit = () => {
     const edited = questions.map((item) =>
@@ -98,12 +122,11 @@ function CreateQuestion() {
     );
     setQuestions(edited);
     setIsEdit(false);
-    setQuestionText("")
-    setAnswer1("")
-    setAnswer2("")
-    setAnswer3("")
-    setAnswer4("")
-
+    setQuestionText("");
+    setAnswer1("");
+    setAnswer2("");
+    setAnswer3("");
+    setAnswer4("");
   };
   return (
     <div
@@ -165,6 +188,7 @@ function CreateQuestion() {
                   className=" text-base rounded-lg"
                   value={correct}
                 >
+                  <option value={null}></option>
                   <option value={1}>گزینه 1</option>
                   <option value={2}>گزینه 2</option>
                   <option value={3}>گزینه 3</option>
@@ -178,7 +202,9 @@ function CreateQuestion() {
                   className=" text-base rounded-lg"
                   value={category}
                 >
-                  <option>آزمون فلان</option>
+                  {exams.map((item) => {
+                    return <option>{item.exam_name}</option>;
+                  })}
                 </select>
               </div>
             </div>
@@ -203,60 +229,138 @@ function CreateQuestion() {
         </div>
       </div>
       <div className=" w-[80%] text-xl">
-        {questions.map((item, index) => {
-          console.log(item)
-          return (
-            <div
-              dir="rtl"
-              className=" my-5 gap-7 justify-center items-center flex flex-col w-full px-4 py-2 rounded-lg bg-blue-300 bg-opacity-50"
-              key={item.number}
-            >
-              <div className=" w-full border-b-2 items-center border-blue-800 flex justify-between">
-                <h2 className=" w-[90%] text-start">
-                  سوال {item.number}:{item.questionText}
-                </h2>
-                <FaEdit
-                  onClick={() => handleEdit(item)}
-                  className=" text-blue-800 cursor-pointer"
-                />
-                <TiDelete
-                  onClick={() => removeQuestion(item.number)}
-                  className=" cursor-pointer text-3xl text-red-700"
-                />
-              </div>
-              <div className=" items-start w-full flex flex-col gap-5">
-                <h2
-                  className={` px-2 rounded-lg min-w-24 ${
-                    item.correct == 1 ? "bg-green-600" : "bg-red-600"
-                  }`}
+        <div className=" mt-10 z-20  flex items-center flex-wrap justify-center p-4 gap-3 w-full rounded-lg bg-indigo-300">
+          <h2 onClick={()=>setFiltredQuestions(false)}
+            className={` cursor-pointer  rounded-lg hover:bg-blue-700 p-1 min-w-64 ${
+              id ? "bg-blue-700 border-b-2 border-white" : "bg-blue-500"
+            }`}
+          >
+            همه
+          </h2>
+          {exams.map((item) => {
+            return (
+              <h2
+                onClick={() => filteringQuestions(item)}
+                className={` cursor-pointer  rounded-lg hover:bg-blue-700 p-1 min-w-64 ${
+                  id === item.id
+                    ? "bg-blue-700 border-b-2 border-white"
+                    : "bg-blue-500"
+                }`}
+              >
+                {item.exam_name}
+              </h2>
+            );
+          })}
+        </div>
+        {filtredQuestions
+          ? filtredQuestions.map((item, index) => {
+              console.log(item);
+              return (
+                <div
+                  dir="rtl"
+                  className=" my-5 gap-7 justify-center items-center flex flex-col w-full px-4 py-2 rounded-lg bg-blue-300 bg-opacity-50"
+                  key={item.number}
                 >
-                  1-{item.answer1}
-                </h2>
-                <h2
-                  className={` px-2 rounded-lg min-w-24 ${
-                    item.correct == 2 ? "bg-green-600" : "bg-red-600"
-                  }`}
+                  <div className=" w-full border-b-2 items-center border-blue-800 flex justify-between">
+                    <h2 className=" w-[90%] text-start">
+                      سوال {item.number}:{item.questionText}
+                    </h2>
+                    <FaEdit
+                      onClick={() => handleEdit(item)}
+                      className=" text-blue-800 cursor-pointer"
+                    />
+                    <TiDelete
+                      onClick={() => removeQuestion(item.number)}
+                      className=" cursor-pointer text-3xl text-red-700"
+                    />
+                  </div>
+                  <div className=" items-start w-full flex flex-col gap-5">
+                    <h2
+                      className={` px-2 rounded-lg min-w-24 ${
+                        item.correct == 1 ? "bg-green-600" : "bg-red-600"
+                      }`}
+                    >
+                      1-{item.answer1}
+                    </h2>
+                    <h2
+                      className={` px-2 rounded-lg min-w-24 ${
+                        item.correct == 2 ? "bg-green-600" : "bg-red-600"
+                      }`}
+                    >
+                      2-{item.answer2}
+                    </h2>
+                    <h2
+                      className={` px-2 rounded-lg min-w-24 ${
+                        item.correct == 3 ? "bg-green-600" : "bg-red-600"
+                      }`}
+                    >
+                      3-{item.answer3}
+                    </h2>
+                    <h2
+                      className={` px-2 rounded-lg min-w-24 ${
+                        item.correct == 4 ? "bg-green-600" : "bg-red-600"
+                      }`}
+                    >
+                      4-{item.answer4}
+                    </h2>
+                  </div>
+                </div>
+              );
+            })
+          : questions.map((item, index) => {
+              console.log(item);
+              return (
+                <div
+                  dir="rtl"
+                  className=" my-5 gap-7 justify-center items-center flex flex-col w-full px-4 py-2 rounded-lg bg-blue-300 bg-opacity-50"
+                  key={item.number}
                 >
-                  2-{item.answer2}
-                </h2>
-                <h2
-                  className={` px-2 rounded-lg min-w-24 ${
-                    item.correct == 3 ? "bg-green-600" : "bg-red-600"
-                  }`}
-                >
-                  3-{item.answer3}
-                </h2>
-                <h2
-                  className={` px-2 rounded-lg min-w-24 ${
-                    item.correct == 4 ? "bg-green-600" : "bg-red-600"
-                  }`}
-                >
-                  4-{item.answer4}
-                </h2>
-              </div>
-            </div>
-          );
-        })}
+                  <div className=" w-full border-b-2 items-center border-blue-800 flex justify-between">
+                    <h2 className=" w-[90%] text-start">
+                      سوال {item.number}:{item.questionText}
+                    </h2>
+                    <FaEdit
+                      onClick={() => handleEdit(item)}
+                      className=" text-blue-800 cursor-pointer"
+                    />
+                    <TiDelete
+                      onClick={() => removeQuestion(item.number)}
+                      className=" cursor-pointer text-3xl text-red-700"
+                    />
+                  </div>
+                  <div className=" items-start w-full flex flex-col gap-5">
+                    <h2
+                      className={` px-2 rounded-lg min-w-24 ${
+                        item.correct == 1 ? "bg-green-600" : "bg-red-600"
+                      }`}
+                    >
+                      1-{item.answer1}
+                    </h2>
+                    <h2
+                      className={` px-2 rounded-lg min-w-24 ${
+                        item.correct == 2 ? "bg-green-600" : "bg-red-600"
+                      }`}
+                    >
+                      2-{item.answer2}
+                    </h2>
+                    <h2
+                      className={` px-2 rounded-lg min-w-24 ${
+                        item.correct == 3 ? "bg-green-600" : "bg-red-600"
+                      }`}
+                    >
+                      3-{item.answer3}
+                    </h2>
+                    <h2
+                      className={` px-2 rounded-lg min-w-24 ${
+                        item.correct == 4 ? "bg-green-600" : "bg-red-600"
+                      }`}
+                    >
+                      4-{item.answer4}
+                    </h2>
+                  </div>
+                </div>
+              );
+            })}
       </div>
     </div>
   );

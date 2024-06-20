@@ -113,13 +113,10 @@ function CreateExam() {
               </div>
               <div className=" gap-2 flex ">
                 <h2 className="text-2xl">سازمان مدرک دهنده:</h2>
-                <select
+                <input
                   {...register("exam_company")}
-                  className=" w-40 rounded-md"
-                >
-                  <option></option>
-                  <option>هرچی</option>
-                </select>
+                  className=" px-2 w-40 rounded-md"
+                />
               </div>
             </div>
           </div>
