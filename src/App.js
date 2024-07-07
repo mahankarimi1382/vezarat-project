@@ -10,6 +10,10 @@ import Admin3 from "./Pages/Main/Admin3/Admin3";
 import Admin4 from "./Pages/Main/Admin4/Admin4";
 import Admin5 from "./Pages/Main/Admin5/Admin5";
 import User1 from "./Pages/Main/User/User1/User1";
+import Admin6 from "./Pages/Main/Admin6/Admin6";
+import Admin7 from "./Pages/Main/Admin7/Admin7";
+import User2 from "./Pages/Main/User/User2/User2";
+import Exam from "./Pages/Main/User/Exam";
 
 function App() {
   return (
@@ -25,6 +29,10 @@ function App() {
           <Route path="Admin/CreateLicense" element={<Admin4 />} />
           <Route path="Admin/Accepters" element={<Admin5 />} />
           <Route path="User/jointoexam" element={<User1 />} />
+
+          <Route path="/User/mydocs" element={<User2 />} />
+          <Route path="Admin/Hosts" element={<Admin6 />} />
+          <Route path="Admin/userRequests" element={<Admin7 />} />
         </Routes>
         <ToastContainer />
       </BrowserRouter>

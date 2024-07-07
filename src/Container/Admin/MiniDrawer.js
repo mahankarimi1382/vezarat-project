@@ -1,9 +1,11 @@
 import React from "react";
 import logo from "../../assets/Logo.png";
 import { FaWpforms } from "react-icons/fa";
+import { FaPeopleGroup } from "react-icons/fa6";
 import { GrDocumentPerformance } from "react-icons/gr";
 import { MdFormatListNumberedRtl } from "react-icons/md";
 import { FaPeopleLine } from "react-icons/fa6";
+import { BsCardChecklist } from "react-icons/bs";
 import { TbLicense } from "react-icons/tb";
 import { useLocation, useNavigate } from "react-router";
 
@@ -39,7 +41,7 @@ function MiniDrawer() {
               : " px-2 hover:bg-slate-300 hover:text-blue-800 rounded-md transition-all text-white cursor-pointer border-b-[1px] border-opacity-50 py-4 border-white flex w-4/5 justify-between items-center text-2xl"
           }
         >
-          <h2>ایجاد آزمون</h2>
+          <h2>برگزاری آزمون</h2>
           <GrDocumentPerformance />
         </div>
         <div
@@ -74,6 +76,28 @@ function MiniDrawer() {
         >
           <h2>تایید کنندگان </h2>
           <FaPeopleLine />
+        </div>
+        <div
+          onClick={() => navigate("/Admin/Hosts")}
+          className={
+            location.pathname === "/Admin/Hosts"
+              ? "px-2 bg-slate-300 text-blue-800 rounded-md transition-all cursor-pointer border-b-[1px] border-opacity-50 py-4 border-white flex w-4/5 justify-between items-center text-2xl"
+              : " px-2 hover:bg-slate-300 hover:text-blue-800 rounded-md transition-all text-white cursor-pointer border-b-[1px] border-opacity-50 py-4 border-white flex w-4/5 justify-between items-center text-2xl"
+          }
+        >
+          <h2>برگزار کنندگان</h2>
+          <FaPeopleGroup />
+        </div>
+        <div
+          onClick={() => navigate("/Admin/userRequests")}
+          className={
+            location.pathname === "/Admin/userRequests"
+              ? "px-2 bg-slate-300 text-blue-800 rounded-md transition-all cursor-pointer border-b-[1px] border-opacity-50 py-4 border-white flex w-4/5 justify-between items-center text-2xl"
+              : " px-2 hover:bg-slate-300 hover:text-blue-800 rounded-md transition-all text-white cursor-pointer border-b-[1px] border-opacity-50 py-4 border-white flex w-4/5 justify-between items-center text-2xl"
+          }
+        >
+          <h2>تایید شرکت کنندگان</h2>
+          <BsCardChecklist />
         </div>
       </div>
     </div>

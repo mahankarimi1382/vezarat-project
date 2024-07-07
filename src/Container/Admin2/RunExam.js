@@ -131,7 +131,7 @@ function RunExam() {
     >
       <div className=" w-4/5 h-1/2 backdrop-blur-md backdrop-brightness-150 bg-cyan-700 shadow-lg shadow-blue-500/50  rounded-xl bg-opacity-50">
         <h2 className=" bg-blue-700 text-white rounded-t-xl py-4 text-2xl font-semibold">
-          ایجاد آزمون
+          برگزاری آزمون
         </h2>
         <form
           onSubmit={handleSubmit(onSubmitForm)}
@@ -147,6 +147,7 @@ function RunExam() {
                   className=" w-60 h-8 px-2 text-lg text-black rounded-md"
                   {...register("exam_name")}
                 >
+                  <option></option>
                   {examDetails.map((item) => {
                     return <option key={item.id}>{item.exam_name}</option>;
                   })}
@@ -213,9 +214,11 @@ function RunExam() {
                   {...register("exam_license")}
                   className=" w-40 rounded-md"
                 >
-                  {licenses.map((item) => {
-                    return <option>{item.license_name}</option>;
-                  })}
+                  <option></option>
+                  {licenses &&
+                    licenses.map((item) => {
+                      return <option>{item.license_name}</option>;
+                    })}
                 </select>
               </div>
               <div className=" gap-[46px] flex ">

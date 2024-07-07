@@ -1,6 +1,7 @@
 import React from "react";
 import { IoEnter } from "react-icons/io5";
 import { MdWorkHistory } from "react-icons/md";
+
 import logo from "../assets/Logo.png";
 import { useLocation, useNavigate } from "react-router";
 
@@ -29,9 +30,9 @@ function UserDrawer() {
           <IoEnter />
         </div>
         <div
-          onClick={() => navigate("/Admin/mydocs")}
+          onClick={() => navigate("/User/mydocs")}
           className={
-            location.pathname === "/Admin/RunExam"
+            location.pathname === "/User/mydocs"
               ? "px-2 bg-slate-300 text-blue-800 rounded-md transition-all cursor-pointer border-b-[1px] border-opacity-50 py-4 border-white flex w-4/5 justify-between items-center text-2xl"
               : " px-2 hover:bg-slate-300 hover:text-blue-800 rounded-md transition-all text-white cursor-pointer border-b-[1px] border-opacity-50 py-4 border-white flex w-4/5 justify-between items-center text-2xl"
           }

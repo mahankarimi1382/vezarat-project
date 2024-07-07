@@ -7,8 +7,7 @@ function CreateExam() {
   const [createdExam, setCreatedExam] = useState(() => {
     return JSON.parse(localStorage.getItem("createdExam")) || [];
   });
-  const [acceptersDetails, setAcceptersDetails] = useState([]);
-  console.log(acceptersDetails);
+  const [hostsDetails, sethostsDetails] = useState([]);
   const {
     register,
     handleSubmit,
@@ -28,8 +27,8 @@ function CreateExam() {
     }
   };
   useEffect(() => {
-    const accepters = JSON.parse(localStorage.getItem("accepters"));
-    setAcceptersDetails(accepters);
+    const hosts = JSON.parse(localStorage.getItem("hosts"));
+    sethostsDetails(hosts);
   }, []);
   useEffect(() => {
     localStorage.setItem("createdExam", JSON.stringify(createdExam));
@@ -106,8 +105,9 @@ function CreateExam() {
                   {...register("exam_host")}
                   className=" w-36 h-8 px-2 text-base rounded-md"
                 >
-                  {acceptersDetails.map((item) => {
-                    return <option>{item.accepter_name}</option>;
+                  <option></option>
+                  {hostsDetails&&hostsDetails.map((item) => {
+                    return <option>{item.host}</option>;
                   })}
                 </select>
               </div>

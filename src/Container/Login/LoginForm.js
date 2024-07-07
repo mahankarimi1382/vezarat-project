@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import VerifyCodeModal from "./VerifyCodeModal";
@@ -7,7 +7,10 @@ import { Eror, success } from "../../utilies/Toasts";
 function LoginForm() {
   const [isEmail, setIsEmail] = useState(false);
   const [modal, setModal] = useState(false);
-
+  const [loginInfo, setLoginInfo] = useState({});
+  useEffect(() => {
+    localStorage.setItem("login_info", JSON.stringify(loginInfo));
+  }, [loginInfo]);
   const {
     register,
     handleSubmit,
@@ -17,8 +20,8 @@ function LoginForm() {
   } = useForm();
   const onSubmit = (data) => {
     console.log(data);
-
-    if (!data.national_code || !data.phone && !data.Email) {
+    setLoginInfo(data);
+    if (!data.national_code || (!data.phone && !data.Email)) {
       Eror("لطفا اطلاعات خواسته شده را کامل وارد کنید");
     } else {
       success(`کد تایید به شماره ی ${data.phone} ارسال شد`);

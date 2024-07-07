@@ -14,7 +14,9 @@ function CreateQuestion() {
   const [answer4, setAnswer4] = useState("");
   const [correct, setCorrect] = useState("");
   const [category, setCategory] = useState("");
-  const [questions, setQuestions] = useState([]);
+  const [questions, setQuestions] = useState(() => {
+    return JSON.parse(localStorage.getItem("questions")) || [];
+  });
   const [id, setId] = useState("");
   console.log(questions);
   const [count, setCount] = useState(questions.length + 1);
@@ -78,6 +80,10 @@ function CreateQuestion() {
       Eror("لطفا اطلاعات سوال را کامل وارد کنید");
     }
   };
+  useEffect(()=>{
+    localStorage.setItem("questions", JSON.stringify(questions));
+
+  },[questions])
   const handleEdit = (item) => {
     setIsEdit(true);
     setQuestionText(item.questionText);
@@ -199,9 +205,10 @@ function CreateQuestion() {
                 <h2>دسته ی آزمون:</h2>
                 <select
                   onChange={(e) => setCategory(e.target.value)}
-                  className=" text-base rounded-lg"
+                  className=" text-base w-20 rounded-lg"
                   value={category}
                 >
+                  <option></option>
                   {exams.map((item) => {
                     return <option>{item.exam_name}</option>;
                   })}

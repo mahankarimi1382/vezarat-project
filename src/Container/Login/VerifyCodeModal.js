@@ -58,7 +58,7 @@ function VerifyCodeModal({ setModal }) {
             className=" text-center w-1/12 bg-slate-300 h-10 rounded-lg border-b-indigo-600 border-2"
           />
         </div>
-        <Timer />
+        <Timer time={2} />
       </div>
     </div>
   );

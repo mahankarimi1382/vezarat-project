@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Eror } from "../../utilies/Toasts";
 import Date from "../../Components/Date";
@@ -7,8 +7,18 @@ import { useNavigate } from "react-router";
 
 function SignUpForm() {
   const [date, setDate] = useState("");
+  const [signUpInfo, setSignUpInfo] = useState({});
+  const [loginInfo, setLoginInfo] = useState({});
+  console.log(loginInfo);
+  console.log(signUpInfo);
+  useEffect(() => {
+    let login = JSON.parse(localStorage.getItem("login_info"));
+    setLoginInfo(login);
+  }, []);
+  useEffect(() => {
+    localStorage.setItem("info", JSON.stringify(signUpInfo));
+  }, [signUpInfo]);
   const navigate = useNavigate();
-  console.log(date);
   const {
     register,
     handleSubmit,
@@ -17,6 +27,15 @@ function SignUpForm() {
   } = useForm();
   const onSubmit = (data) => {
     console.log(data);
+    setSignUpInfo({
+      Phone: loginInfo.phone,
+      National_code: loginInfo.national_code,
+      Name: data.Name,
+      License: data.license,
+      Familly: data.Familly,
+      City: data.City,
+      DateOfBirth: date,
+    });
     if (!date || !data.City || !data.Familly || !data.Name || !data.license) {
       Eror("لطفا اطلاعات خود را کامل وارد کنید");
     } else {
